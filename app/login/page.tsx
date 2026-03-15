@@ -65,10 +65,9 @@ export default function LoginPage() {
       <style>{`
         @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
         .login-form { animation: fadeInUp 0.5s ease forwards; }
-        @keyframes floatLine { 0%,100%{opacity:0.03} 50%{opacity:0.07} }
       `}</style>
 
-      {/* Decorative background lines */}
+      {/* Decorative background */}
       <svg className="absolute inset-0 w-full h-full" style={{ opacity:0.04 }} viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice">
         <line x1="0" y1="200" x2="400" y2="200" stroke="#a78bfa" strokeWidth="0.5"/>
         <line x1="0" y1="400" x2="400" y2="400" stroke="#a78bfa" strokeWidth="0.5"/>
@@ -80,32 +79,18 @@ export default function LoginPage() {
         <circle cx="200" cy="400" r="240" fill="none" stroke="#7c3aed" strokeWidth="0.3"/>
       </svg>
 
-      {/* Soft violet glow in background */}
       <div className="absolute" style={{ width:'300px', height:'300px', borderRadius:'50%', background:'radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%)', top:'50%', left:'50%', transform:'translate(-50%,-50%)', pointerEvents:'none' }} />
 
       <div className="login-form w-full max-w-sm space-y-8 relative z-10">
 
-        {/* Logo area */}
-        <div className="text-center space-y-4">
-          <div className="relative mx-auto w-20 h-20">
-            {/* Outer ring */}
-            <div className="absolute inset-0 rounded-full" style={{ border:'1px solid #2d1f52' }} />
-            {/* Inner ring */}
-            <div className="absolute inset-2 rounded-full" style={{ border:'0.5px solid #1e1530' }} />
-            {/* M */}
-            <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-violet-300 relative" style={{ background:'#150f28', fontFamily:'Georgia,serif' }}>
-              M
-            </div>
-          </div>
-
-          <div>
-            <h1 className="text-2xl font-semibold text-[#e2d9f3]" style={{ fontFamily:'Georgia,serif', letterSpacing:'2px' }}>
-              MUSE NOIR
-            </h1>
-            <p className="text-xs text-[#4c3d6e] mt-1.5 italic tracking-wide">
-              haunts your exams so you don't have to
-            </p>
-          </div>
+        {/* Logo text only — no M circle */}
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl font-semibold text-[#e2d9f3]" style={{ fontFamily:'Georgia,serif', letterSpacing:'2px' }}>
+            MUSE NOIR
+          </h1>
+          <p className="text-xs text-[#4c3d6e] italic tracking-wide">
+            haunts your exams so you don't have to
+          </p>
         </div>
 
         {/* Divider */}
@@ -117,28 +102,23 @@ export default function LoginPage() {
 
         {/* Form */}
         <div className="space-y-3">
-          <div className="relative">
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="Email address"
-              className="w-full rounded-2xl px-4 py-3.5 text-sm text-[#e2d9f3] placeholder-[#4c3d6e] focus:outline-none transition-all"
-              style={{ background:'#150f28', border: email ? '1px solid #4c1d95' : '1px solid #1e1530' }}
-            />
-          </div>
-
-          <div className="relative">
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleLogin()}
-              placeholder="Password"
-              className="w-full rounded-2xl px-4 py-3.5 text-sm text-[#e2d9f3] placeholder-[#4c3d6e] focus:outline-none transition-all"
-              style={{ background:'#150f28', border: password ? '1px solid #4c1d95' : '1px solid #1e1530' }}
-            />
-          </div>
+          <input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="Email address"
+            className="w-full rounded-2xl px-4 py-3.5 text-sm text-[#e2d9f3] placeholder-[#4c3d6e] focus:outline-none transition-all"
+            style={{ background:'#150f28', border: email ? '1px solid #4c1d95' : '1px solid #1e1530' }}
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleLogin()}
+            placeholder="Password"
+            className="w-full rounded-2xl px-4 py-3.5 text-sm text-[#e2d9f3] placeholder-[#4c3d6e] focus:outline-none transition-all"
+            style={{ background:'#150f28', border: password ? '1px solid #4c1d95' : '1px solid #1e1530' }}
+          />
 
           {error && (
             <div className="rounded-xl px-4 py-3" style={{ background:'#2a0f0f', border:'1px solid #3d1515' }}>
@@ -161,7 +141,6 @@ export default function LoginPage() {
           </button>
         </div>
 
-        {/* Footer */}
         <div className="space-y-3 text-center">
           <p className="text-sm text-[#6b5f8a]">
             Don't have an account?{' '}
