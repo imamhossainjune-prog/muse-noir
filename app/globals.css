@@ -17,13 +17,6 @@ body {
   overflow-x: hidden;
   background-color: #0d0a1a;
   color: #e2d9f3;
-}
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-  background-color: #0d0a1a;
-  color: #e2d9f3;
   font-size: 17px;
 }
 
@@ -31,19 +24,10 @@ input, textarea, button {
   font-family: inherit;
 }
 
-/* Global safe padding for all main content */
-main {
-  padding-left: max(1.5rem, env(safe-area-inset-left));
-  padding-right: max(1.5rem, env(safe-area-inset-right));
-}
-
-/* Remove double padding on elements that add their own */
-main > .sticky,
-main > nav {
-  padding-left: 0;
-  padding-right: 0;
-  margin-left: -max(1.5rem, env(safe-area-inset-left));
-  margin-right: -max(1.5rem, env(safe-area-inset-right));
+/* Serif headings — applied globally */
+h1, h2, h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  letter-spacing: 0.02em;
 }
 
 ::-webkit-scrollbar {
@@ -63,4 +47,3 @@ main > nav {
   background: #4c1d95;
   color: #ede9fe;
 }
-
