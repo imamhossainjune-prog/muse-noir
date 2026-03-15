@@ -2,19 +2,32 @@
 import { createClient } from '@/lib/supabase/server'
 import Groq from 'groq-sdk'
 
-
-
 async function extractTextFromPDF(buffer: Buffer): Promise<string> {
+  if (typeof globalThis.DOMMatrix === 'undefined') {
+    (globalThis as any).DOMMatrix = class DOMMatrix {
+      constructor() {}
+      static fromMatrix() { return new (globalThis as any).DOMMatrix() }
+    }
+  }
+  if (typeof globalThis.Path2D === 'undefined') {
+    (globalThis as any).Path2D = class Path2D {}
+  }
+  if (typeof globalThis.ImageData === 'undefined') {
+    (globalThis as any).ImageData = class ImageData {}
+  }
+
   const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs')
   const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(buffer) })
   const pdf = await loadingTask.promise
   let fullText = ''
+
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i)
     const content = await page.getTextContent()
     const pageText = content.items.map((item: any) => item.str).join(' ')
     fullText += pageText + '\n'
   }
+
   return fullText
 }
 
@@ -145,6 +158,7 @@ export async function POST(req: Request) {
     }
 
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+
     const summaryResponse = await groq.chat.completions.create({
       model: 'llama-3.3-70b-versatile',
       max_tokens: 500,
