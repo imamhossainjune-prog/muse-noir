@@ -1,6 +1,6 @@
 export default function DashboardLoading() {
   return (
-    <main className="min-h-screen bg-[#0d0a1a] pb-24">
+    <main className="min-h-screen bg-[#0d0a1a] pb-24 pt-2">
       <div className="border-b border-[#1e1530] px-6 py-5">
         <div className="h-6 w-32 rounded-xl bg-[#150f28] animate-pulse" />
         <div className="h-3 w-24 rounded-xl bg-[#150f28] animate-pulse mt-2" />

@@ -52,8 +52,8 @@ export default function ToolsPage() {
 
   if (activeTool && selectedTool) {
     return (
-      <main className="min-h-screen bg-[#0d0a1a] pb-24">
-        <div className="sticky top-0 z-10 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-6 py-5 backdrop-blur-xl flex items-center gap-3">
+      <main className="min-h-screen bg-[#0d0a1a] pb-24 pt-2">
+        <div className="sticky top-0 z-10 mt-0 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-6 py-5 backdrop-blur-xl flex items-center gap-3">
           <button onClick={goBack} className="w-8 h-8 rounded-full bg-[#150f28] border border-[#1e1530] flex items-center justify-center">
             <svg className="w-4 h-4 text-[#6b5f8a]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -101,8 +101,8 @@ export default function ToolsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#0d0a1a] pb-24">
-      <div className="sticky top-0 z-10 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-6 py-5 backdrop-blur-xl">
+    <main className="min-h-screen bg-[#0d0a1a] pb-24 pt-2">
+      <div className="sticky top-0 z-10 mt-0 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-6 py-5 backdrop-blur-xl">
         <h1 className="text-xl font-semibold text-[#e2d9f3]">Magic Tools</h1>
         <p className="text-sm text-[#3c3170] mt-0.5 italic">haunts your exams so you don't have to</p>
       </div>

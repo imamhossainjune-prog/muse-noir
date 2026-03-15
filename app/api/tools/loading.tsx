@@ -1,6 +1,6 @@
 export default function ToolsLoading() {
   return (
-    <main className="min-h-screen bg-[#0d0a1a] pb-24">
+    <main className="min-h-screen bg-[#0d0a1a] pb-24 pt-2">
       <div className="border-b border-[#1e1530] px-6 py-5 space-y-1">
         <div className="h-6 w-28 rounded-xl bg-[#150f28] animate-pulse" />
         <div className="h-3 w-48 rounded-lg bg-[#150f28] animate-pulse" />
