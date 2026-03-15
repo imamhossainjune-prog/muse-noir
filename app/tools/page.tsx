@@ -53,7 +53,7 @@ export default function ToolsPage() {
   if (activeTool && selectedTool) {
     return (
       <main className="min-h-screen bg-[#0d0a1a] pb-24">
-        <div className="sticky top-0 z-10 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-5 py-4 backdrop-blur-xl flex items-center gap-3">
+        <div className="sticky top-0 z-10 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-6 py-5 backdrop-blur-xl flex items-center gap-3">
           <button onClick={goBack} className="w-8 h-8 rounded-full bg-[#150f28] border border-[#1e1530] flex items-center justify-center">
             <svg className="w-4 h-4 text-[#6b5f8a]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -69,7 +69,7 @@ export default function ToolsPage() {
             <p className="text-xs text-[#6b5f8a]">{selectedTool.description}</p>
           </div>
         </div>
-        <div className="px-5 pt-6 space-y-4">
+        <div className="px-6 pt-6 space-y-4">
           <div className="rounded-2xl bg-[#150f28] border border-[#1e1530] overflow-hidden">
             <textarea
               value={input}
@@ -102,11 +102,11 @@ export default function ToolsPage() {
 
   return (
     <main className="min-h-screen bg-[#0d0a1a] pb-24">
-      <div className="sticky top-0 z-10 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-5 py-4 backdrop-blur-xl">
+      <div className="sticky top-0 z-10 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-6 py-5 backdrop-blur-xl">
         <h1 className="text-xl font-semibold text-[#e2d9f3]">Magic Tools</h1>
         <p className="text-sm text-[#3c3170] mt-0.5 italic">haunts your exams so you don't have to</p>
       </div>
-      <div className="px-5 pt-6">
+      <div className="px-6 pt-6">
         <div className="grid grid-cols-2 gap-3">
           {TOOLS.map(tool => (
             <button

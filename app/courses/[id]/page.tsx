@@ -31,7 +31,7 @@ export default function CoursePage() {
     return (
       <main className="min-h-screen bg-[#0d0a1a] pb-24">
         <div className="h-16 bg-[#0d0a1a]/90 border-b border-[#1e1530]" />
-        <div className="px-5 pt-6 space-y-3">
+        <div className="px-6 pt-6 space-y-3">
           {[1,2].map(i => <div key={i} className="h-32 rounded-2xl bg-[#150f28] animate-pulse" />)}
         </div>
         <BottomNav />
@@ -41,7 +41,7 @@ export default function CoursePage() {
 
   return (
     <main className="min-h-screen bg-[#0d0a1a] pb-24">
-      <div className="sticky top-0 z-10 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-5 py-4 backdrop-blur-xl">
+      <div className="sticky top-0 z-10 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-6 py-5 backdrop-blur-xl">
         <div className="flex items-center gap-3">
           <button onClick={() => router.back()} className="w-8 h-8 rounded-full bg-[#150f28] border border-[#1e1530] flex items-center justify-center">
             <svg className="w-4 h-4 text-[#6b5f8a]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -56,7 +56,7 @@ export default function CoursePage() {
         </div>
       </div>
 
-      <div className="px-5 pt-6 space-y-6">
+      <div className="px-6 pt-8 space-y-6">
         <div>
           <p className="text-xs font-medium text-[#6b5f8a] uppercase tracking-wide mb-3">Upload files</p>
           <FileUploader courseId={id} onUploadComplete={loadCourse} />

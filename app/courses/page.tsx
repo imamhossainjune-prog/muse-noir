@@ -80,7 +80,7 @@ export default function CoursesPage() {
   if (loading) {
   return (
     <main className="min-h-screen bg-[#0d0a1a] pb-24">
-      <div className="border-b border-[#1e1530] px-5 py-4 flex items-center gap-3">
+      <div className="border-b border-[#1e1530] px-6 py-5 flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-[#150f28] animate-pulse" />
         <div className="w-3 h-3 rounded-full bg-[#1e1530] animate-pulse" />
         <div className="space-y-1.5">
@@ -88,7 +88,7 @@ export default function CoursesPage() {
           <div className="h-3 w-16 rounded-lg bg-[#150f28] animate-pulse" />
         </div>
       </div>
-      <div className="px-5 pt-6 space-y-6">
+      <div className="px-6 pt-8 space-y-6">
         <div className="rounded-2xl bg-[#150f28] border border-[#1e1530] p-8 flex flex-col items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-[#1e1530] animate-pulse" />
           <div className="h-4 w-40 rounded-lg bg-[#1e1530] animate-pulse" />
@@ -121,7 +121,7 @@ export default function CoursesPage() {
 
   return (
     <main className="min-h-screen bg-[#0d0a1a] pb-24">
-      <div className="sticky top-0 z-10 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-5 py-4 backdrop-blur-xl flex items-center justify-between">
+      <div className="sticky top-0 z-10 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-6 py-5 backdrop-blur-xl flex items-center justify-between">
         <h1 className="text-xl font-semibold text-[#e2d9f3]">Courses</h1>
         <button
           onClick={() => setShowNewSemester(true)}
@@ -134,7 +134,7 @@ export default function CoursesPage() {
         </button>
       </div>
 
-      <div className="px-5 pt-6 space-y-8">
+      <div className="px-6 pt-6 space-y-8">
 
         {showNewSemester && (
           <div className="rounded-2xl bg-[#150f28] border border-[#2d1f52] p-4 space-y-3">

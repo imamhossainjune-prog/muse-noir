@@ -1,11 +1,11 @@
 export default function ToolsLoading() {
   return (
     <main className="min-h-screen bg-[#0d0a1a] pb-24">
-      <div className="border-b border-[#1e1530] px-5 py-4 space-y-1">
+      <div className="border-b border-[#1e1530] px-6 py-5 space-y-1">
         <div className="h-6 w-28 rounded-xl bg-[#150f28] animate-pulse" />
         <div className="h-3 w-48 rounded-lg bg-[#150f28] animate-pulse" />
       </div>
-      <div className="px-5 pt-6">
+      <div className="px-6 pt-6">
         <div className="grid grid-cols-2 gap-3">
           {[1,2,3,4,5,6,7].map(i => (
             <div key={i} className="rounded-2xl bg-[#150f28] border border-[#1e1530] p-4 space-y-3">

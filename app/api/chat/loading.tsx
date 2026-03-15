@@ -1,7 +1,7 @@
 export default function ChatLoading() {
   return (
     <main className="min-h-screen bg-[#0d0a1a] pb-16 flex flex-col">
-      <div className="border-b border-[#1e1530] px-5 py-4 space-y-3">
+      <div className="border-b border-[#1e1530] px-6 py-5 space-y-3">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-[#150f28] animate-pulse" />
           <div className="space-y-1.5">

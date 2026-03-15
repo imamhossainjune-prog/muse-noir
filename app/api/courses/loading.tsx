@@ -1,11 +1,11 @@
 export default function CoursesLoading() {
   return (
     <main className="min-h-screen bg-[#0d0a1a] pb-24">
-      <div className="border-b border-[#1e1530] px-5 py-4 flex items-center justify-between">
+      <div className="border-b border-[#1e1530] px-6 py-5 flex items-center justify-between">
         <div className="h-6 w-24 rounded-xl bg-[#150f28] animate-pulse" />
         <div className="h-8 w-24 rounded-full bg-[#150f28] animate-pulse" />
       </div>
-      <div className="px-5 pt-6 space-y-6">
+      <div className="px-6 pt-8 space-y-6">
         {[1,2].map(i => (
           <div key={i} className="space-y-3">
             <div className="flex items-center justify-between">

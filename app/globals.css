@@ -23,6 +23,21 @@ input, textarea, button {
   font-family: inherit;
 }
 
+/* Global safe padding for all main content */
+main {
+  padding-left: max(1.5rem, env(safe-area-inset-left));
+  padding-right: max(1.5rem, env(safe-area-inset-right));
+}
+
+/* Remove double padding on elements that add their own */
+main > .sticky,
+main > nav {
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: -max(1.5rem, env(safe-area-inset-left));
+  margin-right: -max(1.5rem, env(safe-area-inset-right));
+}
+
 ::-webkit-scrollbar {
   width: 4px;
 }
@@ -40,3 +55,4 @@ input, textarea, button {
   background: #4c1d95;
   color: #ede9fe;
 }
+
