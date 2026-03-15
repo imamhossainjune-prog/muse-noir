@@ -78,17 +78,46 @@ export default function CoursesPage() {
   }
 
   if (loading) {
-    return (
-      <main className="min-h-screen bg-[#0d0a1a] flex items-center justify-center pb-24">
-        <div className="space-y-3 w-full px-5">
-          {[1,2,3].map(i => (
-            <div key={i} className="h-16 rounded-2xl bg-[#150f28] animate-pulse" />
+  return (
+    <main className="min-h-screen bg-[#0d0a1a] pb-24">
+      <div className="border-b border-[#1e1530] px-5 py-4 flex items-center gap-3">
+        <div className="w-8 h-8 rounded-full bg-[#150f28] animate-pulse" />
+        <div className="w-3 h-3 rounded-full bg-[#1e1530] animate-pulse" />
+        <div className="space-y-1.5">
+          <div className="h-5 w-32 rounded-lg bg-[#150f28] animate-pulse" />
+          <div className="h-3 w-16 rounded-lg bg-[#150f28] animate-pulse" />
+        </div>
+      </div>
+      <div className="px-5 pt-6 space-y-6">
+        <div className="rounded-2xl bg-[#150f28] border border-[#1e1530] p-8 flex flex-col items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-[#1e1530] animate-pulse" />
+          <div className="h-4 w-40 rounded-lg bg-[#1e1530] animate-pulse" />
+          <div className="h-3 w-56 rounded-lg bg-[#1e1530] animate-pulse" />
+        </div>
+        <div className="space-y-3">
+          <div className="h-3 w-16 rounded-lg bg-[#150f28] animate-pulse" />
+          {[1,2].map(i => (
+            <div key={i} className="rounded-2xl bg-[#150f28] border border-[#1e1530] p-4 space-y-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-[#1e1530] animate-pulse" />
+                <div className="space-y-1.5 flex-1">
+                  <div className="h-4 w-40 rounded-lg bg-[#1e1530] animate-pulse" />
+                  <div className="h-3 w-20 rounded-lg bg-[#1e1530] animate-pulse" />
+                </div>
+              </div>
+              <div className="border-t border-[#1e1530] pt-3 space-y-1.5">
+                <div className="h-3 w-full rounded-lg bg-[#1e1530] animate-pulse" />
+                <div className="h-3 w-5/6 rounded-lg bg-[#1e1530] animate-pulse" />
+                <div className="h-3 w-4/6 rounded-lg bg-[#1e1530] animate-pulse" />
+              </div>
+            </div>
           ))}
         </div>
-        <BottomNav />
-      </main>
-    )
-  }
+      </div>
+      <BottomNav />
+    </main>
+  )
+}
 
   return (
     <main className="min-h-screen bg-[#0d0a1a] pb-24">
