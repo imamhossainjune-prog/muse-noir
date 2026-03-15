@@ -26,7 +26,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#0d0a1a" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
-      <body className="bg-[#0d0a1a] text-[#e2d9f3] antialiased">
+      <body className="bg-[#0d0a1a] text-[#e2d9f3] antialiased pt-3">
         {children}
       </body>
     </html>
