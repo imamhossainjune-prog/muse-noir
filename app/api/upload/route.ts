@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Groq from 'groq-sdk'
 
-async function extractTextFromPDF(buffer: Buffer): Promise<string> {
+async function extractFromPDF(buffer: Buffer): Promise<string> {
   if (typeof globalThis.DOMMatrix === 'undefined') {
     (globalThis as any).DOMMatrix = class DOMMatrix {
       constructor() {}
@@ -31,6 +31,42 @@ async function extractTextFromPDF(buffer: Buffer): Promise<string> {
   return fullText
 }
 
+async function extractFromDocx(buffer: Buffer): Promise<string> {
+  const mammoth = require('mammoth')
+  const result = await mammoth.extractRawText({ buffer })
+  return result.value
+}
+
+async function extractFromPptx(buffer: Buffer): Promise<string> {
+  const officeParser = require('officeparser')
+  return new Promise((resolve, reject) => {
+    const parseFunc = officeParser.parseOffice ||
+      officeParser.default?.parseOffice ||
+      officeParser
+
+    if (typeof parseFunc === 'function') {
+      try {
+        parseFunc(buffer, (text: string, err: any) => {
+          if (err) reject(err)
+          else resolve(text ?? '')
+        })
+      } catch (e: any) {
+        reject(e)
+      }
+    } else {
+      reject(new Error('officeparser not available'))
+    }
+  })
+}
+
+async function extractText(buffer: Buffer, fileName: string): Promise<string> {
+  const lower = fileName.toLowerCase()
+  if (lower.endsWith('.pdf')) return extractFromPDF(buffer)
+  if (lower.endsWith('.docx') || lower.endsWith('.doc')) return extractFromDocx(buffer)
+  if (lower.endsWith('.pptx') || lower.endsWith('.ppt')) return extractFromPptx(buffer)
+  throw new Error('Unsupported file type')
+}
+
 async function embedText(text: string): Promise<number[]> {
   try {
     const { pipeline } = await import('@xenova/transformers')
@@ -41,6 +77,16 @@ async function embedText(text: string): Promise<number[]> {
     console.error('Embed error:', err.message)
     return new Array(384).fill(0)
   }
+}
+
+const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.doc', '.pptx', '.ppt']
+
+function getFileType(fileName: string): string {
+  const lower = fileName.toLowerCase()
+  if (lower.endsWith('.pdf')) return 'pdf'
+  if (lower.endsWith('.docx') || lower.endsWith('.doc')) return 'word'
+  if (lower.endsWith('.pptx') || lower.endsWith('.ppt')) return 'powerpoint'
+  return 'unknown'
 }
 
 export async function POST(req: Request) {
@@ -57,8 +103,11 @@ export async function POST(req: Request) {
     return Response.json({ error: 'Missing file or course' }, { status: 400 })
   }
 
-  if (!file.name.endsWith('.pdf')) {
-    return Response.json({ error: 'Only PDF files are supported' }, { status: 400 })
+  const isAllowed = ALLOWED_EXTENSIONS.some(ext => file.name.toLowerCase().endsWith(ext))
+  if (!isAllowed) {
+    return Response.json({
+      error: 'Unsupported file type. Please upload a PDF, Word (.docx), or PowerPoint (.pptx)'
+    }, { status: 400 })
   }
 
   try {
@@ -66,10 +115,11 @@ export async function POST(req: Request) {
 
     const buffer = Buffer.from(await file.arrayBuffer())
     const filePath = `${userId}/${courseId}/${Date.now()}-${file.name}`
+    const fileType = getFileType(file.name)
 
     const { error: uploadError } = await supabase.storage
       .from('documents')
-      .upload(filePath, buffer, { contentType: 'application/pdf' })
+      .upload(filePath, buffer, { contentType: 'application/octet-stream' })
 
     if (uploadError) {
       console.error('Storage upload error:', uploadError)
@@ -85,7 +135,7 @@ export async function POST(req: Request) {
         user_id: userId,
         file_name: file.name,
         file_path: filePath,
-        file_type: 'pdf',
+        file_type: fileType,
       })
       .select()
       .single()
@@ -99,16 +149,16 @@ export async function POST(req: Request) {
 
     let fullText = ''
     try {
-      fullText = await extractTextFromPDF(buffer)
+      fullText = await extractText(buffer, file.name)
       console.log('Extracted text length:', fullText.length)
-    } catch (pdfErr: any) {
-      console.error('PDF parse error:', pdfErr.message)
-      return Response.json({ error: 'Could not read PDF: ' + pdfErr.message }, { status: 400 })
+    } catch (extractErr: any) {
+      console.error('Text extraction error:', extractErr.message)
+      return Response.json({ error: 'Could not read file: ' + extractErr.message }, { status: 400 })
     }
 
     if (!fullText || fullText.trim().length < 50) {
       return Response.json({
-        error: 'Could not read text from this PDF. It may be a scanned image PDF.'
+        error: 'Could not read text from this file. It may be image-only or empty.'
       }, { status: 400 })
     }
 
