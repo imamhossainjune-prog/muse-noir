@@ -15,19 +15,15 @@ async function extractFromPDF(buffer: Buffer): Promise<string> {
   if (typeof globalThis.ImageData === 'undefined') {
     (globalThis as any).ImageData = class ImageData {}
   }
-
   const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs')
   const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(buffer) })
   const pdf = await loadingTask.promise
   let fullText = ''
-
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i)
     const content = await page.getTextContent()
-    const pageText = content.items.map((item: any) => item.str).join(' ')
-    fullText += pageText + '\n'
+    fullText += content.items.map((item: any) => item.str).join(' ') + '\n'
   }
-
   return fullText
 }
 
@@ -43,16 +39,13 @@ async function extractFromPptx(buffer: Buffer): Promise<string> {
     const parseFunc = officeParser.parseOffice ||
       officeParser.default?.parseOffice ||
       officeParser
-
     if (typeof parseFunc === 'function') {
       try {
         parseFunc(buffer, (text: string, err: any) => {
           if (err) reject(err)
           else resolve(text ?? '')
         })
-      } catch (e: any) {
-        reject(e)
-      }
+      } catch (e: any) { reject(e) }
     } else {
       reject(new Error('officeparser not available'))
     }
@@ -65,18 +58,6 @@ async function extractText(buffer: Buffer, fileName: string): Promise<string> {
   if (lower.endsWith('.docx') || lower.endsWith('.doc')) return extractFromDocx(buffer)
   if (lower.endsWith('.pptx') || lower.endsWith('.ppt')) return extractFromPptx(buffer)
   throw new Error('Unsupported file type')
-}
-
-async function embedText(text: string): Promise<number[]> {
-  try {
-    const { pipeline } = await import('@xenova/transformers')
-    const extractor = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2')
-    const output = await extractor(text, { pooling: 'mean', normalize: true })
-    return Array.from(output.data as Float32Array)
-  } catch (err: any) {
-    console.error('Embed error:', err.message)
-    return new Array(384).fill(0)
-  }
 }
 
 const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.doc', '.pptx', '.ppt']
@@ -106,7 +87,7 @@ export async function POST(req: Request) {
   const isAllowed = ALLOWED_EXTENSIONS.some(ext => file.name.toLowerCase().endsWith(ext))
   if (!isAllowed) {
     return Response.json({
-      error: 'Unsupported file type. Please upload a PDF, Word (.docx), or PowerPoint (.pptx)'
+      error: 'Unsupported file type. Please upload PDF, Word (.docx), or PowerPoint (.pptx)'
     }, { status: 400 })
   }
 
@@ -122,11 +103,8 @@ export async function POST(req: Request) {
       .upload(filePath, buffer, { contentType: 'application/octet-stream' })
 
     if (uploadError) {
-      console.error('Storage upload error:', uploadError)
       return Response.json({ error: 'File upload failed: ' + uploadError.message }, { status: 500 })
     }
-
-    console.log('File uploaded to storage')
 
     const { data: doc, error: docError } = await supabase
       .from('documents')
@@ -141,18 +119,14 @@ export async function POST(req: Request) {
       .single()
 
     if (docError || !doc) {
-      console.error('Document insert error:', docError)
       return Response.json({ error: 'Could not save document record' }, { status: 500 })
     }
-
-    console.log('Document record created:', doc.id)
 
     let fullText = ''
     try {
       fullText = await extractText(buffer, file.name)
       console.log('Extracted text length:', fullText.length)
     } catch (extractErr: any) {
-      console.error('Text extraction error:', extractErr.message)
       return Response.json({ error: 'Could not read file: ' + extractErr.message }, { status: 400 })
     }
 
@@ -167,8 +141,11 @@ export async function POST(req: Request) {
       .replace(/\x00/g, '')
       .replace(/[\x01-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
 
-    const chunkSize = 1000
-    const chunkOverlap = 150
+    // ── Split into chunks and save WITHOUT embeddings ──
+    // Embeddings are skipped on Vercel due to timeout limits
+    // The chat route uses keyword matching instead
+    const chunkSize = 1500
+    const chunkOverlap = 200
     const chunks: string[] = []
     let start = 0
 
@@ -181,19 +158,12 @@ export async function POST(req: Request) {
 
     console.log('Created', chunks.length, 'chunks')
 
-    const embeddings: number[][] = []
-    for (let i = 0; i < chunks.length; i++) {
-      const embedding = await embedText(chunks[i])
-      embeddings.push(embedding)
-      console.log(`Embedded chunk ${i + 1} of ${chunks.length}`)
-    }
-
     const chunkRows = chunks.map((content, i) => ({
       document_id: doc.id,
       course_id: courseId,
       user_id: userId,
       content,
-      embedding: embeddings[i],
+      embedding: null,
       chunk_index: i,
     }))
 
@@ -204,9 +174,10 @@ export async function POST(req: Request) {
     if (chunksError) {
       console.error('Chunks insert error:', chunksError)
     } else {
-      console.log('Saved', chunkRows.length, 'chunks to database')
+      console.log('Saved', chunks.length, 'chunks')
     }
 
+    // ── Generate summary ──
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
     const summaryResponse = await groq.chat.completions.create({

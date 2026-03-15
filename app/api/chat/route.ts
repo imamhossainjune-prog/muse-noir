@@ -1,20 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Groq from 'groq-sdk'
 
-
-
-async function embedQuestion(text: string): Promise<number[]> {
-  try {
-    const { pipeline } = await import('@xenova/transformers')
-    const extractor = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2')
-    const output = await extractor(text, { pooling: 'mean', normalize: true })
-    return Array.from(output.data as Float32Array)
-  } catch (err: any) {
-    console.error('Embed error:', err.message)
-    return new Array(384).fill(0)
-  }
-}
-
 export async function POST(req: Request) {
   try {
     const supabase = await createClient()
@@ -31,31 +17,52 @@ export async function POST(req: Request) {
     const latestMessage = messages[messages.length - 1].content as string
     console.log('Chat question:', latestMessage)
 
-    // ── STEP 1: Embed the question ──
-    const queryEmbedding = await embedQuestion(latestMessage)
+    // ── Keyword search through chunks ──
+    // Extract keywords from the question and search chunk content
+    const keywords = latestMessage
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '')
+      .split(' ')
+      .filter(w => w.length > 3)
+      .slice(0, 8)
 
-    // ── STEP 2: Find the most relevant chunks from notes ──
-    const { data: chunks, error: searchError } = await supabase.rpc('match_chunks', {
-      query_embedding: queryEmbedding,
-      match_user_id: userId,
-      match_course_id: courseId || null,
-      match_count: 6,
-    })
+    let query = supabase
+      .from('document_chunks')
+      .select('id, content, document_id')
+      .eq('user_id', userId)
+      .order('chunk_index', { ascending: true })
+      .limit(50)
 
-    if (searchError) {
-      console.error('Search error:', searchError)
+    if (courseId) {
+      query = query.eq('course_id', courseId)
     }
 
-    console.log('Found', chunks?.length ?? 0, 'relevant chunks')
+    const { data: allChunks } = await query
 
-    // ── STEP 3: Build context from retrieved chunks ──
-    const context = chunks && chunks.length > 0
-      ? chunks.map((c: any, i: number) => `[Source ${i + 1}]\n${c.content}`).join('\n\n---\n\n')
+    // Score chunks by keyword matches
+    const scored = (allChunks ?? []).map(chunk => {
+      const lower = chunk.content.toLowerCase()
+      const score = keywords.reduce((acc, kw) => {
+        const matches = (lower.match(new RegExp(kw, 'g')) || []).length
+        return acc + matches
+      }, 0)
+      return { ...chunk, score }
+    })
+
+    // Take top 6 most relevant chunks
+    const topChunks = scored
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6)
+      .filter(c => c.score > 0)
+
+    console.log('Found', topChunks.length, 'relevant chunks')
+
+    const context = topChunks.length > 0
+      ? topChunks.map((c, i) => `[Source ${i + 1}]\n${c.content}`).join('\n\n---\n\n')
       : ''
 
     const hasContext = context.length > 0
 
-    // ── STEP 4: Build the system prompt ──
     const systemPrompt = hasContext
       ? `You are Muse Noir, a warm and intelligent study assistant for university students.
 
@@ -63,17 +70,15 @@ RULES:
 - Answer ONLY using the context provided below from the student's own notes
 - If the answer is not in the context, say: "I couldn't find that in your notes. Try uploading more material for this topic."
 - Never make up information or use outside knowledge
-- Be warm, clear, and concise — like a brilliant friend explaining something
-- If context partially answers the question, share what you found and note what's missing
+- Be warm, clear, and concise
 
 CONTEXT FROM THE STUDENT'S NOTES:
 ${context}`
       : `You are Muse Noir, a warm and intelligent study assistant.
 The student has not uploaded any notes yet, or no relevant notes were found.
-Tell them warmly that you need their notes to answer and suggest they upload course materials first.
+Tell them warmly to upload their course materials first.
 Keep it short and encouraging.`
 
-    // ── STEP 5: Stream the response ──
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
     const stream = await groq.chat.completions.create({
@@ -87,7 +92,6 @@ Keep it short and encouraging.`
       ],
     })
 
-    // ── STEP 6: Return streaming response ──
     const encoder = new TextEncoder()
     const readable = new ReadableStream({
       async start(controller) {
