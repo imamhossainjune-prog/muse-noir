@@ -5,12 +5,6 @@ export const metadata: Metadata = {
   title: 'Muse Noir',
   description: 'haunts your exams so you don\'t have to',
   manifest: '/manifest.json',
-  themeColor: '#0d0a1a',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'black-translucent',
-    title: 'Muse Noir',
-  },
 }
 
 export default function RootLayout({
@@ -25,9 +19,17 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="theme-color" content="#0d0a1a" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
-      <body className="bg-[#0d0a1a] text-[#e2d9f3] antialiased pt-3">
-        {children}
+      <body className="bg-[#0d0a1a] text-[#e2d9f3] antialiased">
+        <div style={{
+          maxWidth: '480px',
+          margin: '0 auto',
+          minHeight: '100vh',
+          position: 'relative',
+        }}>
+          {children}
+        </div>
       </body>
     </html>
   )

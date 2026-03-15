@@ -24,10 +24,29 @@ input, textarea, button {
   font-family: inherit;
 }
 
-/* Serif headings — applied globally */
 h1, h2, h3 {
   font-family: Georgia, 'Times New Roman', serif;
   letter-spacing: 0.02em;
+}
+
+/* Global page padding — every page gets safe margins */
+main {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Unstick the sticky headers so they span full width */
+main .sticky {
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Same for bottom nav */
+main nav {
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
 }
 
 ::-webkit-scrollbar {
