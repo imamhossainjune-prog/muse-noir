@@ -103,7 +103,7 @@ export default function ToolsPage() {
   return (
     <main className="min-h-screen bg-[#0d0a1a] pb-24 pt-2">
       <div className="sticky top-0 z-10 mt-0 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-6 py-5 backdrop-blur-xl">
-        <h1 className="text-xl font-semibold text-[#e2d9f3]">Magic Tools</h1>
+        <h1 className="text-2xl font-semibold text-[#e2d9f3]">Magic Tools</h1>
         <p className="text-sm text-[#3c3170] mt-0.5 italic">haunts your exams so you don't have to</p>
       </div>
       <div className="px-6 pt-6">
@@ -119,7 +119,7 @@ export default function ToolsPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d={tool.icon} />
                 </svg>
               </div>
-              <p className="text-sm font-medium text-[#e2d9f3] mb-1">{tool.name}</p>
+              <p className="text-base font-medium text-[#e2d9f3] mb-1">{tool.name}</p>
               <p className="text-xs text-[#6b5f8a] leading-relaxed">{tool.description}</p>
             </button>
           ))}

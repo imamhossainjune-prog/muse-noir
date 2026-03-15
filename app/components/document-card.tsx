@@ -23,7 +23,7 @@ export function DocumentCard({ document }: DocumentCardProps) {
             </svg>
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-[#e2d9f3] truncate">{document.file_name}</p>
+            <p className="text-base font-medium text-[#e2d9f3] truncate">{document.file_name}</p>
             <p className="text-xs text-[#6b5f8a]">{uploadDate}</p>
           </div>
         </div>

@@ -106,7 +106,7 @@ export default function CoursesPage() {
 
       {/* Header */}
       <div className="sticky top-0 z-10 border-b border-[#1e1530] bg-[#0d0a1a]/90 px-6 py-5 backdrop-blur-xl flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-[#e2d9f3]">Courses</h1>
+        <h1 className="text-2xl font-semibold text-[#e2d9f3]">Courses</h1>
         <button
           onClick={() => setShowNewSemester(true)}
           className="flex items-center gap-1.5 rounded-full bg-violet-700 px-4 py-2 text-sm font-medium text-white"
@@ -237,7 +237,7 @@ export default function CoursesPage() {
                       style={{ backgroundColor: course.color }}
                     />
                     <div>
-                      <p className="text-sm font-medium text-[#e2d9f3]">{course.name}</p>
+                      <p className="text-base font-medium text-[#e2d9f3]">{course.name}</p>
                       {course.code && (
                         <p className="text-xs text-[#6b5f8a] mt-0.5">{course.code}</p>
                       )}

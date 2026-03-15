@@ -50,7 +50,7 @@ export default function CoursePage() {
           </button>
           {course && <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: course.color }} />}
           <div>
-            <h1 className="text-xl font-semibold text-[#e2d9f3]">{course?.name ?? 'Course'}</h1>
+            <h1 className="text-2xl font-semibold text-[#e2d9f3]">{course?.name ?? 'Course'}</h1>
             {course?.code && <p className="text-xs text-[#6b5f8a]">{course.code}</p>}
           </div>
         </div>
