@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { BottomNav } from '../components/bottom-nav'
+import { BottomNav } from '@/app/components/bottom-nav'
 
 interface Course {
   id: string

@@ -1,9 +1,9 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import { FileUploader } from '../../components/file-uploader'
-import { DocumentCard } from '../../components/document-card'
-import { BottomNav } from '../../components/bottom-nav'
+import { FileUploader } from '@/app/components/file-uploader'
+import { DocumentCard } from '@/app/components/document-card'
+import { BottomNav } from '@/app/components/bottom-nav'
 
 export default function CoursePage() {
   const { id } = useParams() as { id: string }

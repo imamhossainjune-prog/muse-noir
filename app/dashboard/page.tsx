@@ -1,4 +1,4 @@
-import { BottomNav } from '../components/bottom-nav'
+import { BottomNav } from '@/app/components/bottom-nav'
 
 export default function DashboardPage() {
   return (
